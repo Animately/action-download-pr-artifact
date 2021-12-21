@@ -13,10 +13,10 @@ async function main() {
   const [owner, repo] = core.getInput('repo').split('/');
   const destPath = core.getInput('path');
 
-  console.log('==> pr', pr);
-  console.log('==> workflowFilename', workflowFilename);
-  console.log('==> owner', owner);
-  console.log('==> repo', repo);
+  console.log('==> PR', pr);
+  console.log('==> Workflow Filename', workflowFilename);
+  console.log('==> Owner', owner);
+  console.log('==> Repo', repo);
 
   const client = github.getOctokit(token);
 
@@ -29,6 +29,8 @@ async function main() {
   if (!pull) {
     throw new Error('No PR found');
   }
+
+  console.log('==> Branch', pull.data.head.ref);
 
   let artifacts = [];
 
@@ -57,10 +59,15 @@ async function main() {
     throw new Error('No artifacts found');
   }
 
-  // get latest artifact
-  const artifact = artifacts[artifacts.length - 1];
+  console.log('==> Artifacts found', artifacts.map(a => a.id).join(', '));
 
-  console.log('==> Artifact:', artifact.id);
+  // sort by date DESC
+  artifacts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+  // get latest created artifact
+  const artifact = artifacts[0];
+
+  console.log('==> Chosen Artifact', artifact.id);
   const size = filesize(artifact.size_in_bytes, { base: 10 });
 
   console.log(`==> Downloading: ${artifact.name}.zip (${size})`);
