@@ -30,7 +30,6 @@ async function main() {
     throw new Error('No PR found');
   }
 
-  // search for ci.yml workflow runs
   let artifacts = [];
 
   for await (const runs of client.paginate.iterator(client.rest.actions.listWorkflowRuns, {
@@ -48,13 +47,10 @@ async function main() {
         run_id: run.id,
       });
 
-      artifacts.push(...af.filter(a => {
-        return a.name === artifactName;
-      }));
+      artifacts.push(...af.filter(a => a.name === artifactName));
     }
   }
 
-  // filter out empty
   artifacts = artifacts.filter(Boolean);
 
   if (artifacts.length === 0) {
@@ -75,7 +71,7 @@ async function main() {
     archive_format: "zip",
   });
 
-  const dir = path.join(destPath, artifact.name);
+  const dir = path.join(destPath);
   fs.mkdirSync(dir, { recursive: true });
 
   const adm = new AdmZip(Buffer.from(zip.data));
@@ -88,7 +84,6 @@ async function main() {
   });
 
   adm.extractAllTo(dir, true);
-
 }
 
 main().catch((err) => {
