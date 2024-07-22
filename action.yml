@@ -14,7 +14,7 @@ inputs:
     description: Repository name with owner (like actions/checkout)
     required: false
     default: ${{ github.repository }}
-  worfklow_file_name:
+  workflow_file_name:
     description: The name of the workflow (like ci.yml)
     required: true
   artifact_name:
