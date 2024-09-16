@@ -9,7 +9,7 @@ async function main() {
   const token = core.getInput('github_token');
   const pr = core.getInput('pr');
   const artifactName = core.getInput('artifact_name', {required: true});
-  const workflowFilename = core.getInput('worfklow_file_name', {
+  const workflowFilename = core.getInput('workflow_file_name', {
     required: true,
   });
   const [owner, repo] = core.getInput('repo').split('/');
